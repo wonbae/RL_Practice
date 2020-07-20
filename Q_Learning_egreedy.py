@@ -4,11 +4,13 @@ import random as pr
 import matplotlib.pyplot as plt
 import numpy as np
 
+
 def rargmax(vector):
     # """argmax that chooses randomly among eligible maximum indices"""
     m = np.amax(vector)
     indices = np.nonzero(vector == m)[0]
     return pr.choice(indices)
+
 
 register(
     id='FrozenLake-v3',
@@ -39,11 +41,11 @@ for i in range(num_episodes):
         else:
             action = np.argmax(Q[state, :])
 
-        # Get new state and reward from enviroment
+        # Get new state and reward from environment
         new_state, reward, done, _ = env.step(action)
 
         # Update Q-Table with new knowledge using learning rate
-        Q[state,action] = reward + dis * np.max([Q[new_state, :]])
+        Q[state, action] = reward + dis * np.max([Q[new_state, :]])
 
         rAll += reward
         state = new_state
@@ -56,3 +58,5 @@ print("LEFT DOWN RIGHT UP")
 print(Q)
 plt.bar(range(len(rList)), rList, color="blue")
 plt.show()
+
+env.close()

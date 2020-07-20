@@ -34,11 +34,11 @@ for i in range(num_episodes):
         # Choose an action by greedily (with noise) picking from Q table
         action = np.argmax(Q[state, :] + np.random.rand(1, env.action_space.n) / (i + 1))
 
-        # Get new state and reward from enviroment
+        # Get new state and reward from environment
         new_state, reward, done, _ = env.step(action)
 
         # Update Q-Table with new knowledge using learning rate
-        Q[state,action] = reward + dis * np.max([Q[new_state, :]])
+        Q[state, action] = reward + dis * np.max([Q[new_state, :]])
 
         rAll += reward
         state = new_state
