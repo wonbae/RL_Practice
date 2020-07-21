@@ -1,13 +1,9 @@
-# Lec 06 Q-Network by sung kim
-# Not working, cause TF-v1
-
 import gym
 import numpy as np
 import tensorflow as tf
 # tf.disable_v2_behavior()
 import matplotlib.pyplot as plt
 
-init = tf.global_variables_initializer()
 env = gym.make("FrozenLake-v0")
 
 # Input and output size based on the Env
@@ -16,15 +12,15 @@ output_size = env.action_space.n
 learning_rate = 0.1
 
 # These lines establish the feed-forward part of the network used to choose actions
-X = tf.placeholder(shape=[1, input_size], dtype=tf.float32)  # state input
-W = tf.Variable(tf.random_uniform([input_size, output_size], 0, 0.01))  # weight
+X = tf.compat.v1.placeholder(shape=[1, input_size], dtype=tf.float32)  # state input
+W = tf.Variable(tf.random.uniform([input_size, output_size], 0, 0.01))  # weight
 
 Qpred = tf.matmul(X, W)  # Out Q prediction
-Y = tf.placeholder(shape=[1, output_size], dtype=tf.float32)    # Y label
+Y = tf.compat.v1.placeholder(shape=[1, output_size], dtype=tf.float32)    # Y label
 
-loss = tf.reduce_sum(tf.square(Y - Qpred))
+loss = tf.reduce_sum(input_tensor=tf.square(Y - Qpred))
 
-train = tf.train.GradientDescentOptimizer(learning_rate=learning_rate).minimize(loss)
+train = tf.compat.v1.train.GradientDescentOptimizer(learning_rate=learning_rate).minimize(loss)
 
 # Set Q-learning relate parameters
 dis = .99
@@ -33,7 +29,8 @@ num_episodes = 2000
 # Create lists to contain total rewards and steps per episode
 rList = []
 
-with tf.Session() as sess:
+init = tf.compat.v1.global_variables_initializer()
+with tf.compat.v1.Session() as sess:
     sess.run(init)
     for i in range(num_episodes):
         # Reset environment and get first new observation
